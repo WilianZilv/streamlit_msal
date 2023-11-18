@@ -8,6 +8,12 @@ This library is designed with simplicity and user-friendliness in mind, and as s
 
 While this approach provides a straightforward user experience, it may not be suitable for all use cases, especially those requiring more complex or robust authentication workflows. Please consider your specific requirements when deciding to use this library.
 
+## Installation
+
+```
+pip install streamlit-msal
+```
+
 ## Application Configuration (Azure)
 
 Create an App with OpenID Connect (OIDC) based sign-on
