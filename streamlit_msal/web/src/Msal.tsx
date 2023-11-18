@@ -6,10 +6,6 @@ import {
 import React, { ReactNode } from "react";
 import * as msal from "@azure/msal-browser";
 
-interface State {
-  initialized: boolean;
-}
-
 interface Props {
   login: boolean;
   logout: boolean;
@@ -56,9 +52,7 @@ function retrieveAccount() {
   return JSON.parse(raw);
 }
 
-class Component extends StreamlitComponentBase<State> {
-  public state = { initialized: false };
-
+class Component extends StreamlitComponentBase {
   public handleAuthenticationResult = (data: any) => {
     saveAccount(data.account);
     Streamlit.setComponentValue({ data });
@@ -126,9 +120,8 @@ class Component extends StreamlitComponentBase<State> {
     }
     previousLogout = logout;
 
-    if ((revalidate && !previousRevalidate) || !this.state.initialized) {
+    if (revalidate && !previousRevalidate) {
       this.revalidate();
-      if (!this.state.initialized) this.setState({ initialized: true });
     }
     previousRevalidate = revalidate;
 
