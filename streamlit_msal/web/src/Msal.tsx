@@ -65,6 +65,8 @@ class Component extends StreamlitComponentBase {
     account: any = null,
     scopes: string[] = []
   ) => {
+    Streamlit.setComponentValue({ in_interaction: true });
+
     const client = new msal.PublicClientApplication({
       auth: {
         clientId,
