@@ -50,10 +50,8 @@ function retrieveAccount() {
 }
 
 class Component extends StreamlitComponentBase {
-  public handleAuthenticationResult = (result: any) => {
-    const data = result.account;
-
-    saveAccount(data);
+  public handleAuthenticationResult = (data: any) => {
+    saveAccount(data.account);
     Streamlit.setComponentValue({ data });
   };
 
