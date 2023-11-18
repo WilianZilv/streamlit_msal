@@ -3,7 +3,7 @@ import {
   StreamlitComponentBase,
   withStreamlitConnection,
 } from "streamlit-component-lib";
-import React, { Fragment, ReactNode, useEffect, useState } from "react";
+import React, { ReactNode } from "react";
 import * as msal from "@azure/msal-browser";
 
 interface Props {
@@ -38,7 +38,6 @@ const authorizeAccountRequest = (account: any, scopes: any[] = []) => ({
 
 function saveAccount(account: any, store: boolean = true) {
   let _str = JSON.stringify(account);
-
   if (!store) return;
   localStorage.setItem(KEY, _str);
 }
