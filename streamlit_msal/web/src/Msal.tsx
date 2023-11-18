@@ -25,7 +25,11 @@ let previousRevalidate = false;
 
 const KEY = "2KZVfd69U79m4kJ3htKg89";
 const isDev = !window.location.href.includes("index.html");
-const redirectUri = isDev ? window.location.href : "/";
+
+let href = decodeURIComponent(window.location.href);
+href = href.split("?").slice(0, -1).join("?");
+
+const redirectUri = isDev ? href : "/";
 
 const accountSelectRequest = (scopes: any[] = []) => ({
   scopes,
