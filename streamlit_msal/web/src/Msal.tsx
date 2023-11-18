@@ -40,13 +40,13 @@ const authorizeAccountRequest = (account: any, scopes: any[] = []) => ({
   redirectUri,
 });
 
-function saveAccount(account: any, store: boolean = true) {
-  let _str = JSON.stringify(account);
+function saveAuthData(authData: any, store: boolean = true) {
+  let _str = JSON.stringify(authData);
   if (!store) return;
   localStorage.setItem(KEY, _str);
 }
 
-function retrieveAccount() {
+function retrieveAuthData() {
   const raw = localStorage.getItem(KEY);
   if (!raw) return null;
   return JSON.parse(raw);
@@ -54,7 +54,7 @@ function retrieveAccount() {
 
 class Component extends StreamlitComponentBase {
   public handleAuthenticationResult = (data: any) => {
-    saveAccount(data.account);
+    saveAuthData(data);
     Streamlit.setComponentValue({ data });
   };
 
@@ -95,13 +95,14 @@ class Component extends StreamlitComponentBase {
   };
 
   public revalidate = () => {
-    const account = retrieveAccount();
-    if (account === null) return Streamlit.setComponentValue({ data: null });
+    const authData = retrieveAuthData();
+    if (authData === null) return Streamlit.setComponentValue({ data: null });
 
     const { args } = this.props;
     const { clientId, authority, scopes }: Props = args;
 
-    this.authenticate(clientId, authority, account, scopes);
+    this.authenticate(clientId, authority, authData.account, scopes);
+  };
   };
 
   public render = (): ReactNode => {
