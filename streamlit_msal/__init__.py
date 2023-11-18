@@ -4,7 +4,7 @@ from typing import Literal, Optional
 import streamlit.components.v1 as components
 import streamlit as st
 
-_RELEASE = False
+_RELEASE = True
 
 
 def declare_component(name: str):
