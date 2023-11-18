@@ -18,6 +18,7 @@ interface Props {
 let previousLogin = false;
 let previousLogout = false;
 let previousRevalidate = false;
+let initialized = false;
 
 const KEY = "2KZVfd69U79m4kJ3htKg89";
 const isDev = !window.location.href.includes("index.html");
@@ -90,7 +91,7 @@ class Component extends StreamlitComponentBase {
     Streamlit.setComponentValue({ data: null });
   };
 
-  public componentDidMount = () => {
+  public revalidate = () => {
     const account = retrieveAccount();
     if (account === null) return Streamlit.setComponentValue({ data: null });
 
@@ -116,10 +117,9 @@ class Component extends StreamlitComponentBase {
     }
     previousLogout = logout;
 
-    if (revalidate && !previousRevalidate) {
-      const account = retrieveAccount();
-      if (account === null) return Streamlit.setComponentValue({ data: null });
-      this.authenticate(clientId, authority, account, scopes);
+    if ((revalidate && !previousRevalidate) || !initialized) {
+      this.revalidate();
+      initialized = true;
     }
     previousRevalidate = revalidate;
 
