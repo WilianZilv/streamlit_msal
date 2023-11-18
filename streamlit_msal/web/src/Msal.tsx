@@ -9,6 +9,7 @@ import * as msal from "@azure/msal-browser";
 interface Props {
   login: boolean;
   logout: boolean;
+  revalidate: boolean;
   clientId: string;
   authority: string;
   scopes: string[];
@@ -16,7 +17,7 @@ interface Props {
 
 let previousLogin = false;
 let previousLogout = false;
-let initialized = false;
+let previousRevalidate = false;
 
 const KEY = "2KZVfd69U79m4kJ3htKg89";
 const isDev = !window.location.href.includes("index.html");
@@ -102,7 +103,8 @@ class Component extends StreamlitComponentBase {
 
   public render = (): ReactNode => {
     const { args } = this.props;
-    const { login, logout, clientId, authority, scopes }: Props = args;
+    const { login, logout, revalidate, clientId, authority, scopes }: Props =
+      args;
 
     if (login && !previousLogin) {
       this.signOut();
@@ -114,6 +116,13 @@ class Component extends StreamlitComponentBase {
       this.signOut();
     }
     previousLogout = logout;
+
+    if (revalidate && !previousRevalidate) {
+      const account = retrieveAccount();
+      if (account === null) return Streamlit.setComponentValue({ data: null });
+      this.authenticate(clientId, authority, account, scopes);
+    }
+    previousRevalidate = revalidate;
 
     return null;
   };
