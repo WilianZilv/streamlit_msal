@@ -1,0 +1,1 @@
+/*! @azure/msal-browser v3.5.0 2023-11-07 */
