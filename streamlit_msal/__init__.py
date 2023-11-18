@@ -24,6 +24,9 @@ def declare_component(name: str):
     return components.declare_component(name, path=build_dir)
 
 
+_component = declare_component("msal")
+
+
 action_key = "streamlit_msal.msal:action"
 
 
@@ -42,8 +45,6 @@ class Msal:
         trigger_login = action == "login"
         trigger_logout = action == "logout"
         revalidate = action == "revalidate"
-
-        _component = declare_component("msal")
 
         value = _component(
             login=trigger_login,
