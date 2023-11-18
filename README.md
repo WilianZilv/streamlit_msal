@@ -72,7 +72,7 @@ if st.button("Revalidate"):
     Msal.revalidate() # Usefull to refresh "accessToken"
 ```
 
-# Accessing result value
+## Accessing result value
 
 ```py
 # Getting usefull information
