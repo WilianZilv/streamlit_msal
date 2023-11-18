@@ -103,6 +103,15 @@ class Component extends StreamlitComponentBase {
 
     this.authenticate(clientId, authority, authData.account, scopes);
   };
+
+  public componentDidMount = () => {
+    Streamlit.setComponentReady();
+    const authData = retrieveAuthData();
+
+    if (authData === null) return this.handleAuthenticationError(null);
+    if (authData.expiresOn <= new Date()) return this.revalidate();
+
+    this.handleAuthenticationResult(authData);
   };
 
   public render = (): ReactNode => {
