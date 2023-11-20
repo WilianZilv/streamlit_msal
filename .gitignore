@@ -14,5 +14,3 @@ node_modules/
 
 # front-end
 !streamlit_msal/web/build/
-pages
-app.py
