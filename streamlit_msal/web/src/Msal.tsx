@@ -68,6 +68,8 @@ class Component extends StreamlitComponentBase {
     account: any = null,
     scopes: string[] = []
   ) => {
+    sessionStorage.removeItem("msal.interaction.status");
+
     Streamlit.setComponentValue({ in_interaction: true });
 
     const client = new msal.PublicClientApplication({
