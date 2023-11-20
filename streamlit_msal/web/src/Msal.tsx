@@ -30,14 +30,12 @@ const redirectUri = isDev ? href : "/";
 const accountSelectRequest = (scopes: any[] = []) => ({
   scopes,
   prompt: "select_account",
-  redirectUri,
 });
 
 const authorizeAccountRequest = (account: any, scopes: any[] = []) => ({
   scopes,
   account,
   prompt: "none",
-  redirectUri,
 });
 
 function saveAuthData(authData: any, store: boolean = true) {
@@ -76,6 +74,7 @@ class Component extends StreamlitComponentBase {
       auth: {
         clientId,
         authority,
+        redirectUri,
       },
     });
 
