@@ -106,6 +106,8 @@ class Component extends StreamlitComponentBase {
   };
 
   public hideComponent = () => {
+    if (isDev) return; // Doesn't work in dev mode
+
     const doc = window.parent.document;
     const root = doc.querySelector("div[id='root']");
     const msals = doc.querySelectorAll('iframe[title="streamlit_msal.msal"]');
