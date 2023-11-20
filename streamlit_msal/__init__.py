@@ -91,34 +91,26 @@ class Msal:
         sign_in_label="Sign in",
         sign_out_label="Sign out",
     ):
-        with st.status(connecting_label) as status:
-            auth_data = Msal.initialize(
-                client_id=client_id, authority=authority, scopes=scopes
-            )
+        x = st.empty()
 
-            is_authenticated = auth_data is not None
+        with x.expander(label=connecting_label, expanded=False):
+            st.write("Connecting...")
 
+        auth_data = Msal.initialize(
+            client_id=client_id, authority=authority, scopes=scopes
+        )
+
+        is_authenticated = auth_data is not None
+
+        label = auth_data["account"]["name"] if is_authenticated else disconnected_label
+
+        with x.expander(label=label, expanded=label == disconnected_label):
             if is_authenticated:
-                name = auth_data["account"]["name"]
-                status.update(label=name)
-            else:
-                status.update(label=disconnected_label, expanded=True, state="error")
+                if st.button(sign_out_label, use_container_width=True):
+                    Msal.sign_out()
 
-            action = "login" if not is_authenticated else "logout"
-
-            label_map = {
-                "login": sign_in_label,
-                "logout": sign_out_label,
-            }
-
-            do_action = st.button(label_map[action], use_container_width=True)
-
-            action = action if do_action else None
-
-            if action == "login":
-                Msal.sign_in()
-
-            if action == "logout":
-                Msal.sign_out()
+            if not is_authenticated:
+                if st.button(sign_in_label, use_container_width=True):
+                    Msal.sign_in()
 
         return auth_data
