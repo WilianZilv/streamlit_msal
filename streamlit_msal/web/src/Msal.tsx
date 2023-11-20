@@ -104,7 +104,24 @@ class Component extends StreamlitComponentBase {
     this.authenticate(clientId, authority, authData.account, scopes);
   };
 
+  public hideComponent = () => {
+    const doc = window.parent.document;
+    const root = doc.querySelector("div[id='root']");
+    const msals = doc.querySelectorAll('iframe[title="streamlit_msal.msal"]');
+
+    if (msals !== null && root !== null) {
+      msals.forEach((msal) => {
+        const msalParent = msal.parentElement;
+        if (msalParent !== null) {
+          msalParent.style.display = "none";
+        }
+      });
+    }
+  };
+
   public componentDidMount = () => {
+    this.hideComponent();
+
     Streamlit.setComponentReady();
     const authData = retrieveAuthData();
 
