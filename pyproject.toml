@@ -21,7 +21,7 @@ build-backend = "hatchling.build"
 managed = true
 dev-dependencies = [
     "streamlit>=1.28.2",
-    "streamlit-superapp>=1.2.0",
+    "streamlit-superapp>=1.3.0",
 ]
 
 [tool.hatch.metadata]
