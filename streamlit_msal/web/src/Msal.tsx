@@ -62,6 +62,7 @@ class Component extends StreamlitComponentBase {
 
     saveAuthData(clientId, data);
     Streamlit.setComponentValue({ data });
+    sessionStorage.setItem("msal.revalidated", "1");
   };
 
   public handleAuthenticationError = (error: any) => {
@@ -118,7 +119,15 @@ class Component extends StreamlitComponentBase {
   public hideComponent = () => {
     if (isDev) return; // Doesn't work in dev mode
 
-    const doc = window.parent.document;
+    const parentWindow = window.parent;
+
+    if (parentWindow.onload === null) {
+      parentWindow.onload = () => {
+        sessionStorage.removeItem("msal.revalidated");
+      };
+    }
+
+    const doc = parentWindow.document;
     const root = doc.querySelector("div[id='root']");
     const msals = doc.querySelectorAll('iframe[title="streamlit_msal.msal"]');
 
@@ -142,6 +151,7 @@ class Component extends StreamlitComponentBase {
     const authData = retrieveAuthData(clientId);
 
     if (authData === null) return this.handleAuthenticationError(null);
+    if (!sessionStorage.getItem("msal.revalidated")) return this.revalidate();
     if (authData.expiresOn <= new Date()) return this.revalidate();
 
     this.handleAuthenticationResult(authData);
