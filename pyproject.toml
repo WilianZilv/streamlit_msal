@@ -1,6 +1,6 @@
 [project]
 name = "streamlit-msal"
-version = "0.1.5"
+version = "0.2.0"
 description = "Add your description here"
 authors = [
     { name = "Wilian", email = "wilianzilv@gmail.com" }
