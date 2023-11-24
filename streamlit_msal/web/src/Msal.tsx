@@ -121,8 +121,8 @@ class Component extends StreamlitComponentBase {
 
     const parentWindow = window.parent;
 
-    if (parentWindow.onload === null) {
-      parentWindow.onload = () => {
+    if (parentWindow.onbeforeunload === null) {
+      parentWindow.onbeforeunload = () => {
         sessionStorage.removeItem("msal.revalidated");
       };
     }
