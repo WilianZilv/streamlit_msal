@@ -19,7 +19,6 @@ let previousLogin = false;
 let previousLogout = false;
 let previousRevalidate = false;
 
-const KEY = "2KZVfd69U79m4kJ3htKg89";
 const isDev = !window.location.href.includes("index.html");
 
 let href = decodeURIComponent(window.location.href);
@@ -38,21 +37,30 @@ const authorizeAccountRequest = (account: any, scopes: any[] = []) => ({
   prompt: "none",
 });
 
-function saveAuthData(authData: any, store: boolean = true) {
+function saveAuthData(clientId: string, authData: any, store: boolean = true) {
   let _str = JSON.stringify(authData);
   if (!store) return;
-  localStorage.setItem(KEY, _str);
+  localStorage.setItem(clientId, _str);
 }
 
-function retrieveAuthData() {
-  const raw = localStorage.getItem(KEY);
+function retrieveAuthData(clientId: string) {
+  const raw = localStorage.getItem(clientId);
   if (!raw) return null;
   return JSON.parse(raw);
 }
 
 class Component extends StreamlitComponentBase {
+  public getClientId = () => {
+    const { args } = this.props;
+    const { clientId }: Props = args;
+
+    return clientId;
+  };
+
   public handleAuthenticationResult = (data: any) => {
-    saveAuthData(data);
+    const clientId = this.getClientId();
+
+    saveAuthData(clientId, data);
     Streamlit.setComponentValue({ data });
   };
 
@@ -91,16 +99,18 @@ class Component extends StreamlitComponentBase {
   };
 
   public signOut = () => {
-    localStorage.removeItem(KEY);
+    const clientId = this.getClientId();
+
+    localStorage.removeItem(clientId);
     Streamlit.setComponentValue({ data: null });
   };
 
   public revalidate = () => {
-    const authData = retrieveAuthData();
-    if (authData === null) return Streamlit.setComponentValue({ data: null });
-
     const { args } = this.props;
     const { clientId, authority, scopes }: Props = args;
+
+    const authData = retrieveAuthData(clientId);
+    if (authData === null) return Streamlit.setComponentValue({ data: null });
 
     this.authenticate(clientId, authority, authData.account, scopes);
   };
@@ -126,7 +136,10 @@ class Component extends StreamlitComponentBase {
     this.hideComponent();
 
     Streamlit.setComponentReady();
-    const authData = retrieveAuthData();
+
+    const clientId = this.getClientId();
+
+    const authData = retrieveAuthData(clientId);
 
     if (authData === null) return this.handleAuthenticationError(null);
     if (authData.expiresOn <= new Date()) return this.revalidate();
